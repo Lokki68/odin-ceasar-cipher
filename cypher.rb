@@ -1,67 +1,42 @@
 #!/usr/local/bin/ruby
 
-class CaesarCipher
+ALPHABET = ('a'..'z').to_a
 
-  ALPHABET = ('a'..'z').to_a
-
-  def initialize(shift)
-    @shift = shift
-  end
-
-  def encrypt(message)
-    message.chars.map { |char| encrypt_char(char) }.join
-  end
-
-  def decrypt(message)
-    message.chars.map { |char| decrypt_char(char) }.join
-  end
-
-  private
-
-  def encrypt_char(char)
-    return char unless ALPHABET.include?(char.downcase)
-
-    is_upcase = char == char.upcase
-    index = ALPHABET.index(char.downcase)
-    shifted_index = (index + @shift) % ALPHABET.size
-    shifted_char = ALPHABET[shifted_index]
-
-    is_upcase ? shifted_char.upcase : shifted_char
-  end
-
-  def decrypt_char(char)
-    return char unless ALPHABET.include?(char.downcase)
-
-    is_upcase = char == char.upcase
-
-    index = ALPHABET.index(char.downcase)
-    shifted_index = (index - @shift) % ALPHABET.size
-    shifted_char = ALPHABET[shifted_index]
-
-    is_upcase ? shifted_char.upcase : char
-  end
+def caesar_cipher (message, shift)
+  encrypt(message, shift)
 end
 
-def encrypt
-  cipher = CaesarCipher.new(5)
-  puts 'saisir la phrase a coder'
-  cipher_text = gets.chomp
-  puts cipher.encrypt(cipher_text)
+private
+
+def encrypt(message, shift)
+  message.chars.map { |char| encrypt_char(char, shift) }.join
 end
 
-def decrypt
-  cipher = CaesarCipher.new(5)
-  puts 'saisir la phrase a decoder'
-  cipher_text = gets.chomp
-  puts cipher.decrypt(cipher_text)
+def decrypt(message, shift)
+  message.chars.map { |char| decrypt_char(char, shift) }.join
 end
 
-puts 'Souhaitez vous encrypter(e) ou decrypter(d) un message'
+def encrypt_char(char, shift)
+  return char unless ALPHABET.include?(char.downcase)
 
-mode = gets.chomp
+  is_upcase = char == char.upcase
+  index = ALPHABET.index(char.downcase)
+  shifted_index = (index + shift) % ALPHABET.size
+  shifted_char = ALPHABET[shifted_index]
 
-if mode == 'e'
-  encrypt
-elsif mode == 'd'
-  decrypt
+  is_upcase ? shifted_char.upcase : shifted_char
 end
+
+def decrypt_char(char, shift)
+  return char unless ALPHABET.include?(char.downcase)
+
+  is_upcase = char == char.upcase
+
+  index = ALPHABET.index(char.downcase)
+  shifted_index = (index - shift) % ALPHABET.size
+  shifted_char = ALPHABET[shifted_index]
+
+  is_upcase ? shifted_char.upcase : char
+end
+
+puts caesar_cipher("Hello, World!", 5)
